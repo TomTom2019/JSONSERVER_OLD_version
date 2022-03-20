@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Alert } from 'react-bootstrap';
 import {useDispatch} from 'react-redux'
 import {sendMessage} from '../../store/actions'
+import { showToast } from '../utils/tools'
 
 const Contact = () => {
    const dispatch = useDispatch()
@@ -21,17 +22,18 @@ const Contact = () => {
             .required('You have to write something')
             .max(500,'The message is too long'),
         }),
+
         onSubmit:(values,{resetForm})=>{
-            //console.log(values);
-            dispatch(sendMessage(values)).then(({payload})=>{
-              if(payload){
-                resetForm()
-              }else{
-                //
-              }
-            })
-        }
-    })
+                 dispatch(sendMessage(values)).then(({payload})=>{
+                     if(payload){
+                         resetForm();
+                         showToast('SUCCESS','Thank you, we will contact you back')
+                     } else {
+                         showToast('ERROR','Sorry something happened, try again.')
+                     }
+                 });
+             }
+         })
 
     return(
         <>
